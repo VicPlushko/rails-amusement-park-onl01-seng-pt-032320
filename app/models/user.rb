@@ -1,14 +1,12 @@
 class User < ActiveRecord::Base
   has_secure_password
-  validates :name, :password, :happiness, :nausea, :height, :tickets, presence: true
   has_many :rides
   has_many :attractions, :through => :rides
+  validates :admin, inclusion: { in: [true, false] }
 
   def mood
-    if self.nausea > self.happiness
-      "sad"
-    else
-      "happy"
+    if !self.admin?
+      self.nausea > self.happiness ? "sad" : "happy"
     end
   end
 end
